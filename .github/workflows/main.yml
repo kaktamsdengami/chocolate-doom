@@ -12,6 +12,7 @@ on:
   pull_request:
     branches:
       - "master"
+      - "player-two-qa"
     paths-ignore:
       - "**.md"
   workflow_dispatch:
