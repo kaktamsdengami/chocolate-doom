@@ -29,7 +29,10 @@
 #include "doomdef.h"
 #include "doomstat.h"
 
+#include <math.h>
+
 #include "r_local.h"
+#include "qa.h"
 #include "r_sky.h"
 
 
@@ -405,6 +408,16 @@ R_StoreWallRange
     hyp = R_PointToDist (curline->v1->x, curline->v1->y);
     sineval = finesine[distangle>>ANGLETOFINESHIFT];
     rw_distance = FixedMul (hyp, sineval);
+
+    if (qa_logging)
+    {
+        double x1 = curline->v1->x / 65536.0, y1 = curline->v1->y / 65536.0;
+        double dx = curline->v2->x / 65536.0 - x1;
+        double dy = curline->v2->y / 65536.0 - y1;
+        double cross = dx * (viewy / 65536.0 - y1) - dy * (viewx / 65536.0 - x1);
+
+        QA_WallDistance(linedef, rw_distance, fabs(cross) / hypot(dx, dy));
+    }
 		
 	
     ds_p->x1 = rw_x = start;

@@ -24,6 +24,7 @@
 
 #include "doomdef.h"
 #include "p_local.h"
+#include "qa.h"
 #include "sounds.h"
 
 #include "st_stuff.h"
@@ -746,6 +747,7 @@ void P_SpawnPlayer (mapthing_t* mthing)
 	ST_Start ();
 	// wake up the heads up text
 	HU_Start ();		
+	QA_Event("spawn", NULL, NULL);
     }
 }
 

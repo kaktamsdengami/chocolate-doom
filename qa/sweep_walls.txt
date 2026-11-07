@@ -1,0 +1,8 @@
+# Survey: turn in place near the longest E1M1 walls, log vanilla wall-distance error.
+2 warp 850 1088 0
+3 move 0 0 256 256
+270 warp 320 1808 0
+271 move 0 0 256 256
+540 warp 2310 -146 0
+541 move 0 0 256 256
+810 quit

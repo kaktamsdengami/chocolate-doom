@@ -74,6 +74,7 @@
 
 
 #include "g_game.h"
+#include "qa.h"
 
 
 #define SAVEGAMESIZE	0x2c000
@@ -725,6 +726,9 @@ void G_DoLoadLevel (void)
     {
         players[consoleplayer].message = "Press escape to quit.";
     }
+
+    QA_Event("level", NULL, "\"episode\":%d,\"map\":%d,\"skill\":%d",
+             gameepisode, gamemap, gameskill);
 } 
 
 static void SetJoyButtons(unsigned int buttons_mask)

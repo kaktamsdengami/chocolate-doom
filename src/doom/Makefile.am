@@ -42,6 +42,8 @@ p_doors.c                       \
 p_enemy.c                       \
 p_floor.c                       \
 p_inter.c          p_inter.h    \
+qa.c               qa.h         \
+qa_names.h                      \
 p_lights.c                      \
                    p_local.h    \
 p_map.c                         \

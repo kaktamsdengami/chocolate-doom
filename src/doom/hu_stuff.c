@@ -30,6 +30,7 @@
 #include "i_video.h"
 
 #include "hu_stuff.h"
+#include "qa.h"
 #include "hu_lib.h"
 #include "m_controls.h"
 #include "m_misc.h"
@@ -471,6 +472,7 @@ void HU_Ticker(void)
 	if ((plr->message && !message_nottobefuckedwith)
 	    || (plr->message && message_dontfuckwithme))
 	{
+	    QA_Event("message", NULL, "\"text\":\"%s\"", QA_Str(plr->message));
 	    HUlib_addMessageToSText(&w_message, 0, plr->message);
 	    plr->message = 0;
 	    message_on = true;

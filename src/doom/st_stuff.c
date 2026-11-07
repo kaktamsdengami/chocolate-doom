@@ -38,6 +38,7 @@
 #include "g_game.h"
 
 #include "st_stuff.h"
+#include "qa.h"
 #include "st_lib.h"
 #include "r_local.h"
 
@@ -305,6 +306,7 @@ static int	st_facecount = 0;
 
 // current face index, used by w_faces
 static int	st_faceindex = 0;
+static int	qa_lastface = -1;
 
 // holds key-type for each key box on bar
 static int	keyboxes[3]; 
@@ -802,6 +804,32 @@ void ST_updateFaceWidget(void)
 
     st_facecount--;
 
+
+    if (st_faceindex != qa_lastface)
+    {
+        const char *kind;
+        int slot = st_faceindex % ST_FACESTRIDE;
+
+        if (st_faceindex == ST_DEADFACE)
+            kind = "dead";
+        else if (st_faceindex == ST_GODFACE)
+            kind = "god";
+        else if (slot == ST_OUCHOFFSET)
+            kind = "ouch";
+        else if (slot == ST_EVILGRINOFFSET)
+            kind = "evilgrin";
+        else if (slot == ST_RAMPAGEOFFSET)
+            kind = "rampage";
+        else if (slot >= ST_TURNOFFSET)
+            kind = "turn";
+        else
+            kind = "straight";
+
+        QA_Event("face", NULL, "\"index\":%d,\"kind\":\"%s\","
+                 "\"health_delta\":%d", st_faceindex, kind,
+                 plyr->health - st_oldhealth);
+        qa_lastface = st_faceindex;
+    }
 }
 
 void ST_updateWidgets(void)

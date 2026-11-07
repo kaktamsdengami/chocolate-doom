@@ -74,6 +74,7 @@
 #include "statdump.h"
 
 #include "d_main.h"
+#include "qa.h"
 
 #include "doom_icon.c"
 
@@ -1769,6 +1770,7 @@ void D_DoomMain (void)
     DEH_printf("I_Init: Setting up machine state.\n");
     I_CheckIsScreensaver();
     I_InitTimer();
+    QA_Init();
     I_InitJoystick();
     I_InitSound(doom);
     I_InitMusic();

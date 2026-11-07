@@ -22,6 +22,7 @@
 #include "p_local.h"
 
 #include "doomstat.h"
+#include "qa.h"
 
 
 int	leveltime;
@@ -140,6 +141,8 @@ void P_Ticker (void)
     }
     
 		
+    QA_PreTick();
+
     for (i=0 ; i<MAXPLAYERS ; i++)
 	if (playeringame[i])
 	    P_PlayerThink (&players[i]);
@@ -150,4 +153,6 @@ void P_Ticker (void)
 
     // for par times
     leveltime++;	
+
+    QA_PostTick();
 }

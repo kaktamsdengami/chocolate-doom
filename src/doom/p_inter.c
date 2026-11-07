@@ -38,6 +38,7 @@
 #include "s_sound.h"
 
 #include "p_inter.h"
+#include "qa.h"
 
 
 #define BONUSADD	6
@@ -283,6 +284,8 @@ P_GivePower
 ( player_t*	player,
   int /*powertype_t*/	power )
 {
+    QA_Event("powerup", NULL, "\"power\":%d", power);
+
     if (power == pw_invulnerability)
     {
 	player->powers[power] = INVULNTICS;
@@ -336,6 +339,7 @@ P_TouchSpecialThing
     int		i;
     fixed_t	delta;
     int		sound;
+    int		qa_health;
 		
     delta = special->z - toucher->z;
 
@@ -349,6 +353,7 @@ P_TouchSpecialThing
 	
     sound = sfx_itemup;	
     player = toucher->player;
+    qa_health = player->health;
 
     // Dead thing touching.
     // Can happen with a sliding player corpse.
@@ -661,6 +666,10 @@ P_TouchSpecialThing
 	
     if (special->flags & MF_COUNTITEM)
 	player->itemcount++;
+    QA_Event("pickup", special, "\"sprite\":\"%s\",\"health_before\":%d,"
+             "\"health_after\":%d,\"message\":\"%s\"",
+             sprnames[special->sprite], qa_health, player->health,
+             QA_Str(player->message));
     P_RemoveMobj (special);
     player->bonuscount += BONUSADD;
     if (player == &players[consoleplayer])
@@ -680,6 +689,10 @@ P_KillMobj
     mobj_t*	mo;
 	
     target->flags &= ~(MF_SHOOTABLE|MF_FLOAT|MF_SKULLFLY);
+    if (target->player)
+        QA_Event("death", source, NULL);
+    else if (source && source->player)
+        QA_Event("kill", target, NULL);
 
     if (target->type != MT_SKULL)
 	target->flags &= ~MF_NOGRAVITY;
@@ -894,6 +907,9 @@ P_DamageMobj
 
 	if (player == &players[consoleplayer])
 	    I_Tactile (40,10,40+temp*2);
+
+	QA_Event("damage", source, "\"amount\":%d,\"inflictor\":\"%s\"",
+	         damage, inflictor ? sprnames[inflictor->sprite] : "");
     }
     
     // do the damage	

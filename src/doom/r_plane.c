@@ -30,6 +30,7 @@
 #include "doomstat.h"
 
 #include "r_local.h"
+#include "qa.h"
 #include "r_sky.h"
 
 
@@ -400,6 +401,7 @@ void R_DrawPlanes (void)
 	    //  by INVUL inverse mapping.
 	    dc_colormap = colormaps;
 	    dc_texturemid = skytexturemid;
+	    QA_SkyDrawn(viewplayer->fixedcolormap);
 	    for (x=pl->minx ; x <= pl->maxx ; x++)
 	    {
 		dc_yl = pl->top[x];

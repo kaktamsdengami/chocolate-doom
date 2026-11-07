@@ -1,0 +1,10 @@
+# KB1 + KB2: pick up a medikit at 20 health, then take a 30-point hit at 100 health.
+# Freedoom 0.13.0 freedoom1.wad, E1M1, skill 3. Medikit thing at (32, 480).
+2 health 20
+2 warp 60 480 180
+3 move 10 0 0 6
+40 shot
+70 health 100
+72 hurt 30
+76 shot
+140 quit

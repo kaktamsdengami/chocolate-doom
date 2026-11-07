@@ -1,0 +1,6 @@
+# KB3: sky keeps normal colours under invulnerability. Freedoom E1M1, sky sector 29.
+2 warp -600 240 0
+10 shot
+20 give invulnerability
+30 shot
+60 quit
