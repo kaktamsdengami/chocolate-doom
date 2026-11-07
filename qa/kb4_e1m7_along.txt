@@ -1,0 +1,5 @@
+# KB4 survey: hug the long south face of E1M7 line 841 and look along it while turning slowly.
+2 warp 1600 228 8
+4 move 0 0 -24 60
+4 shot 60
+70 quit
