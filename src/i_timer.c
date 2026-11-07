@@ -77,6 +77,23 @@ static void QA_CheckKeyPresses(void)
     SDL_PumpEvents();
 }
 
+// A key still held after its step keeps the game running in real time, so a
+// long hold walks further than a tap.
+
+static boolean QA_KeyHeld(void)
+{
+    const Uint8 *state;
+    int numkeys, i;
+
+    state = SDL_GetKeyboardState(&numkeys);
+    for (i = 0; i < numkeys; ++i)
+    {
+        if (state[i])
+            return true;
+    }
+    return false;
+}
+
 static Uint32 VirtualMS(void)
 {
     Uint32 now, delta;
@@ -98,6 +115,8 @@ static Uint32 VirtualMS(void)
         if (qa_step_ms > 0)
         {
             QA_CheckKeyPresses();
+            if (qa_budget_ms <= 0 && QA_KeyHeld())
+                qa_budget_ms = delta;
             if (delta > (Uint32) qa_budget_ms)
                 delta = qa_budget_ms;
             qa_budget_ms -= delta;
