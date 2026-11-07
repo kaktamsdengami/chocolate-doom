@@ -339,6 +339,7 @@ P_TouchSpecialThing
     int		i;
     fixed_t	delta;
     int		sound;
+    int		oldhealth;
     int		qa_health;
 		
     delta = special->z - toucher->z;
@@ -477,10 +478,11 @@ P_TouchSpecialThing
 	break;
 	
       case SPR_MEDI:
+	oldhealth = player->health;
 	if (!P_GiveBody (player, 25))
 	    return;
 
-	if (player->health < 25)
+	if (oldhealth < 25)
 	    player->message = DEH_String(GOTMEDINEED);
 	else
 	    player->message = DEH_String(GOTMEDIKIT);
