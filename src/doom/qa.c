@@ -5,7 +5,8 @@
 //                     PLAYER TWO contracts). Read by the verifier only.
 // -qa-trace <n>       also log the player state every n tics (default 35).
 // -qa-script <file>   timed QA actions, one per line: "<tic> <command> ...".
-// -qa-wall-err <pct>  log walls whose vanilla distance is off by >= pct %.
+// -qa-wall-err <pct>  log walls whose vanilla distance is off by >= pct %
+// -qa-wall-len <n>    ... only for walls at least n units long (default 512).
 //
 
 #include <math.h>
@@ -38,6 +39,7 @@ boolean qa_logging = false;
 static FILE *qa_log;
 static int qa_trace = 35;
 static double qa_wall_err = 2.0;
+static double qa_wall_min_len = 512.0;
 static int qa_last_sky = -1000;
 static double qa_wall_max;
 static int qa_wall_line = -1;
@@ -201,6 +203,10 @@ void QA_Init(void)
     if (i > 0)
         qa_wall_err = atof(myargv[i + 1]);
 
+    i = M_CheckParmWithArgs("-qa-wall-len", 1);
+    if (i > 0)
+        qa_wall_min_len = atof(myargv[i + 1]);
+
     i = M_CheckParmWithArgs("-qa-script", 1);
     if (i > 0)
         LoadScript(myargv[i + 1]);
@@ -324,8 +330,11 @@ void QA_WallDistance(line_t *line, fixed_t vanilla, double precise)
     if (!qa_logging || precise < 16.0)
         return;
 
-    err = fabs(Fixed(vanilla) - precise) * 100.0 / precise;
     len = hypot(Fixed(line->dx), Fixed(line->dy));
+    if (len < qa_wall_min_len)
+        return;
+
+    err = fabs(Fixed(vanilla) - precise) * 100.0 / precise;
 
     if (err >= qa_wall_err && err > qa_wall_max)
     {
