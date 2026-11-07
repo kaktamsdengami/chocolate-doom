@@ -20,6 +20,8 @@
 #ifndef __I_TIMER__
 #define __I_TIMER__
 
+#include "doomtype.h"
+
 #define TICRATE 35
 
 // Called by D_DoomLoop,
@@ -34,6 +36,10 @@ void I_Sleep(int ms);
 
 // Initialize timer
 void I_InitTimer(void);
+
+// PLAYER TWO QA clock (-qa-slowmo, -qa-tics); see i_timer.c
+boolean I_QAClockActive(void);
+void I_QASetFreeRun(boolean freerun);
 
 // Wait for vertical retrace or pause a bit.
 void I_WaitVBL(int count);

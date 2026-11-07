@@ -182,7 +182,7 @@ boolean D_Display (void)
     }
 
     // save the current screen if about to wipe
-    if (gamestate != wipegamestate)
+    if (gamestate != wipegamestate && !I_QAClockActive())
     {
 	wipe = true;
 	wipe_StartScreen(0, 0, SCREENWIDTH, SCREENHEIGHT);
@@ -429,6 +429,8 @@ void D_RunFrame()
 
     // frame syncronous IO operations
     I_StartFrame ();
+
+    I_QASetFreeRun(gamestate != GS_LEVEL || menuactive || paused || demoplayback);
 
     TryRunTics (); // will run at least one tic
 
