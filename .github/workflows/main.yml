@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "master"
+      - "player-two-qa"
     tags:
       - "*"
     paths-ignore:
