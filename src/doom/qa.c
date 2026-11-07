@@ -246,7 +246,7 @@ static void RunCommand(qa_line_t *l)
         // warp <x> <y> <angle in degrees>
         sscanf(l->args, "%d %d %d", &a, &b, &c);
         P_TeleportMove(p->mo, a * FRACUNIT, b * FRACUNIT);
-        p->mo->angle = (angle_t) ((c % 360) * (4294967296.0 / 360.0));
+        p->mo->angle = (angle_t) (((c % 360 + 360) % 360) * (ANG90 / 90));
         p->mo->momx = p->mo->momy = 0;
     }
     else if (!strcmp(l->cmd, "move"))
