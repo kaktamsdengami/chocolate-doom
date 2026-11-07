@@ -117,7 +117,8 @@ void I_QASetFreeRun(boolean freerun)
     {
         VirtualMS();
         qa_freerun = freerun;
-        qa_budget_ms = 0;
+        // one tic on entering the level so the first frame is drawn before any key
+        qa_budget_ms = freerun ? 0 : 1000 / TICRATE + 1;
     }
 }
 
