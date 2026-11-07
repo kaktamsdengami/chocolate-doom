@@ -400,12 +400,18 @@ void R_DrawPlanes (void)
 	    //  unless a fixed colormap (INVUL inverse
 	    //  mapping, light amp) is active.
 	    if (fixedcolormap)
+	    {
 		dc_colormap = fixedcolormap;
+	    }
 	    else
+	    {
 		dc_colormap = colormaps;
+	    }
 	    dc_texturemid = skytexturemid;
 	    if (dc_colormap != fixedcolormap)
+	    {
 		QA_SkyDrawn(viewplayer->fixedcolormap);
+	    }
 	    for (x=pl->minx ; x <= pl->maxx ; x++)
 	    {
 		dc_yl = pl->top[x];
