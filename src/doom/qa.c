@@ -6,7 +6,7 @@
 // -qa-trace <n>       also log the player state every n tics (default 35).
 // -qa-script <file>   timed QA actions, one per line: "<tic> <command> ...".
 // -qa-wall-err <pct>  log walls whose vanilla distance is off by >= pct %
-// -qa-wall-len <n>    ... only for walls at least n units long (default 512).
+// -qa-wall-len <n>    ... only for walls at least n units long (default 512); default pct 0.5.
 //
 
 #include <math.h>
@@ -38,7 +38,7 @@ boolean qa_logging = false;
 
 static FILE *qa_log;
 static int qa_trace = 35;
-static double qa_wall_err = 2.0;
+static double qa_wall_err = 0.5;
 static double qa_wall_min_len = 512.0;
 static int qa_last_sky = -1000;
 static double qa_wall_max;
