@@ -38,11 +38,12 @@ static Uint32 basetime = 0;
 
 static int qa_slowmo = 1;
 static int qa_step_ms = 0;
+static int qa_step_tics = 0;
+static boolean qa_watching = false;
 static int qa_budget_ms = 0;
 static boolean qa_freerun = true;
 static Uint32 qa_last_real = 0;
 static Uint32 qa_scaled = 0;
-static Uint8 qa_keys[SDL_NUM_SCANCODES];
 
 static Uint32 RealMS(void)
 {
@@ -56,23 +57,24 @@ static Uint32 RealMS(void)
     return ticks - basetime;
 }
 
+// Every key-down event starts a step, however short the press: a computer-use
+// agent may release the key before the game ever polls the keyboard state.
+
+static int SDLCALL QA_KeyWatch(void *userdata, SDL_Event *ev)
+{
+    if (ev->type == SDL_KEYDOWN && !ev->key.repeat && !qa_freerun)
+        qa_budget_ms += qa_step_ms;
+    return 1;
+}
+
 static void QA_CheckKeyPresses(void)
 {
-    const Uint8 *state;
-    int numkeys, i;
-
-    SDL_PumpEvents();
-    state = SDL_GetKeyboardState(&numkeys);
-
-    if (numkeys > SDL_NUM_SCANCODES)
-        numkeys = SDL_NUM_SCANCODES;
-
-    for (i = 0; i < numkeys; ++i)
+    if (!qa_watching)
     {
-        if (state[i] && !qa_keys[i])
-            qa_budget_ms += qa_step_ms;
-        qa_keys[i] = state[i];
+        SDL_AddEventWatch(QA_KeyWatch, NULL);
+        qa_watching = true;
     }
+    SDL_PumpEvents();
 }
 
 static Uint32 VirtualMS(void)
@@ -104,6 +106,11 @@ static Uint32 VirtualMS(void)
     }
 
     return qa_scaled / qa_slowmo;
+}
+
+int I_QAStepTics(void)
+{
+    return qa_freerun ? 0 : qa_step_tics;
 }
 
 boolean I_QAClockActive(void)
@@ -183,16 +190,17 @@ void I_InitTimer(void)
     i = M_CheckParmWithArgs("-qa-tics", 1);
     if (i > 0)
     {
-        qa_step_ms = (atoi(myargv[i + 1]) * 1000) / TICRATE;
-        if (qa_step_ms < 0)
-            qa_step_ms = 0;
+        qa_step_tics = atoi(myargv[i + 1]);
+        if (qa_step_tics < 0)
+            qa_step_tics = 0;
+        qa_step_ms = (qa_step_tics * 1000) / TICRATE;
     }
     else if (M_CheckParm("-qa-framestep") > 0)
     {
+        qa_step_tics = TICRATE;
         qa_step_ms = 1000;
     }
 
-    memset(qa_keys, 0, sizeof(qa_keys));
     qa_last_real = RealMS();
     qa_scaled = qa_last_real * qa_slowmo;
 }

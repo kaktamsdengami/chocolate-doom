@@ -200,6 +200,12 @@ static const struct
 #define MAX_JOY_BUTTONS 20
 
 static boolean  gamekeydown[NUMKEYS]; 
+
+// PLAYER TWO QA frame-step: a press holds its key for the whole step, even if
+// the key-up arrives first (an agent's tap lasts less than one frame).
+static int      qa_built;               // ticcmds built so far
+static int      qa_latch[NUMKEYS];      // key counts as held until this ticcmd
+static boolean  qa_release[NUMKEYS];    // key-up arrived during the step
 static int      turnheld;		// for accelerative turning 
  
 static boolean  mousearray[MAX_MOUSE_BUTTONS + 1];
@@ -338,6 +344,16 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     int		tspeed; 
     int		forward;
     int		side;
+
+    for (i = 0; i < NUMKEYS; ++i)
+    {
+        if (qa_release[i] && qa_built >= qa_latch[i])
+        {
+            gamekeydown[i] = false;
+            qa_release[i] = false;
+        }
+    }
+    ++qa_built;
 
     memset(cmd, 0, sizeof(ticcmd_t));
 
@@ -876,13 +892,21 @@ boolean G_Responder (event_t* ev)
         else if (ev->data1 <NUMKEYS) 
         {
 	    gamekeydown[ev->data1] = true; 
+            qa_release[ev->data1] = false;
+            if (I_QAStepTics() > 0)
+                qa_latch[ev->data1] = qa_built + I_QAStepTics();
         }
 
 	return true;    // eat key down events 
  
       case ev_keyup: 
 	if (ev->data1 <NUMKEYS) 
-	    gamekeydown[ev->data1] = false; 
+        {
+            if (qa_built < qa_latch[ev->data1])
+                qa_release[ev->data1] = true;
+            else
+                gamekeydown[ev->data1] = false; 
+        }
 	return false;   // always let key up events filter down 
 		 
       case ev_mouse: 

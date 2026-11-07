@@ -39,6 +39,7 @@ void I_InitTimer(void);
 
 // PLAYER TWO QA clock (-qa-slowmo, -qa-tics); see i_timer.c
 boolean I_QAClockActive(void);
+int I_QAStepTics(void);
 void I_QASetFreeRun(boolean freerun);
 
 // Wait for vertical retrace or pause a bit.
