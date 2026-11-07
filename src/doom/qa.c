@@ -245,6 +245,18 @@ static void RunCommand(qa_line_t *l)
         ev.data1 = ev.data2 = atoi(l->args);
         ST_Responder(&ev);
     }
+    else if (!strcmp(l->cmd, "spawn"))
+    {
+        // spawn <doomednum> <x> <y>: put a thing on the floor (QA start presets)
+        int i, num = 0;
+        sscanf(l->args, "%d %d %d", &num, &a, &b);
+        for (i = 0; i < NUMMOBJTYPES; ++i)
+            if (mobjinfo[i].doomednum == num)
+            {
+                P_SpawnMobj(a * FRACUNIT, b * FRACUNIT, ONFLOORZ, i);
+                break;
+            }
+    }
     else if (!strcmp(l->cmd, "god"))
     {
         p->cheats ^= CF_GODMODE;
