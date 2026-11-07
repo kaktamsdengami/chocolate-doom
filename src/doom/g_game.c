@@ -846,6 +846,11 @@ boolean G_Responder (event_t* ev)
 	    return true; 
 	} 
 #endif 
+	// PLAYER TWO QA: letters typed in a level (cheat codes) are not in a
+	// demo; log them so a replay can type them again at the same tic.
+	if (ev->type == ev_keydown && !demoplayback
+	 && ev->data2 >= 'a' && ev->data2 <= 'z')
+	    QA_Event("key", NULL, "\"key\":%d", ev->data2);
 	if (HU_Responder (ev)) 
 	    return true;	// chat ate the event 
 	if (ST_Responder (ev)) 
@@ -2106,6 +2111,14 @@ void G_WriteDemoTiccmd (ticcmd_t* cmd)
     } 
 	
     G_ReadDemoTiccmd (cmd);         // make SURE it is exactly the same 
+
+    // PLAYER TWO QA: the QA build is closed, not quit, so write the demo as it
+    // grows (every 7 tics) instead of only at the end.
+    if (qa_logging && demoname != NULL && (gametic % (TICRATE / 5)) == 0)
+    {
+        *demo_p = DEMOMARKER;
+        M_WriteFile(demoname, demobuffer, demo_p - demobuffer + 1);
+    }
 } 
  
  

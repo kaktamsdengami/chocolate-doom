@@ -31,6 +31,7 @@
 #include "r_state.h"
 #include "tables.h"
 
+#include "st_stuff.h"
 #include "qa.h"
 #include "qa_names.h"
 
@@ -236,6 +237,13 @@ static void RunCommand(qa_line_t *l)
         for (a = 0; a < arrlen(power_names); ++a)
             if (!strcmp(l->args, power_names[a]))
                 P_GivePower(p, a);
+    }
+    else if (!strcmp(l->cmd, "key"))
+    {
+        // key <char code>: type a letter again (cheat codes, from "key" events)
+        event_t ev = {ev_keydown, 0, 0, 0, 0};
+        ev.data1 = ev.data2 = atoi(l->args);
+        ST_Responder(&ev);
     }
     else if (!strcmp(l->cmd, "god"))
     {
