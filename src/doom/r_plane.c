@@ -396,22 +396,22 @@ void R_DrawPlanes (void)
 	    dc_iscale = pspriteiscale>>detailshift;
 	    
 	    // Sky is allways drawn full bright,
-	    //  i.e. colormaps[0] is used,
-	    //  unless a fixed colormap (INVUL inverse
-	    //  mapping, light amp) is active.
-	    if (fixedcolormap)
-	    {
-		dc_colormap = fixedcolormap;
-	    }
-	    else
-	    {
-		dc_colormap = colormaps;
-	    }
+            //  i.e. colormaps[0] is used,
+            //  unless a fixed colormap (INVUL inverse
+            //  mapping, light amp) is active.
+            if (fixedcolormap)
+            {
+                dc_colormap = fixedcolormap;
+            }
+            else
+            {
+                dc_colormap = colormaps;
+            }
 	    dc_texturemid = skytexturemid;
-	    if (dc_colormap != fixedcolormap)
-	    {
-		QA_SkyDrawn(viewplayer->fixedcolormap);
-	    }
+            if (dc_colormap != fixedcolormap)
+            {
+                QA_SkyDrawn(viewplayer->fixedcolormap);
+            }
 	    for (x=pl->minx ; x <= pl->maxx ; x++)
 	    {
 		dc_yl = pl->top[x];
