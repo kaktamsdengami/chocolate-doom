@@ -1,6 +1,8 @@
 # KB3 for the stage: Freedoom E3M1 has a red sky, visible from the start spot.
 # Under invulnerability the world turns inverted grey and the sky stays red.
+# Holds ~6 s after the pickup so the proof replay is visible on screen and in its clip.
 5 shot
 8 give invulnerability
 12 shot
-20 quit
+120 shot
+220 quit
